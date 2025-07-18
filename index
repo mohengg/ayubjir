@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Celebration!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff9eb7, #ff6b8b, #ff4757);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Birthday Wishing Page */
+        .birthday-title {
+            color: #fff;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            margin-bottom: 2rem;
+            animation: bounce 2s infinite;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(-1deg); }
+            50% { transform: scale(1.1) rotate(0deg); }
+            75% { transform: scale(1.05) rotate(1deg); }
+        }
+        
+        .wish-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .wish-text {
+            color: #ff6b8b;
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .cake-animation {
+            font-size: 4rem;
+            animation: cake-glow 2s ease-in-out infinite alternate;
+            margin: 1rem 0;
+        }
+        
+        @keyframes cake-glow {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.1); filter: brightness(1.2); }
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b8b, #ff4757);
+            color: #fff;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255,107,139,0.4);
+            margin: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,107,139,0.6);
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+        }
+        
+        /* Tetris Game Styles */
+        .game-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .game-title {
+            color: #ff6b8b;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .tetris-board {
+            border: 3px solid #ff6b8b;
+            background: #000;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        
+        .game-controls {
+            background: rgba(255,107,139,0.1);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+        
+        .controls-title {
+            color: #ff6b8b;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .controls-text {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .game-over {
+            display: none;
+            background: rgba(255,107,139,0.9);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Image selector styles */
+        .image-selector {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+        }
+        
+        .image-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+        
+        .image-option {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            object-fit: cover;
+        }
+        
+        .image-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .image-option.selected {
+            border-color: #ff6b8b;
+            box-shadow: 0 0 10px rgba(255,107,139,0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .wish-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .wish-text {
+                font-size: 1.2rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .image-option {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Birthday Wishing Page -->
+        <div id="wishingPage" class="page active">
+            <h1 class="birthday-title">🎉 Happy Birthday! 🎉</h1>
+            
+            <div class="wish-card">
+                <div class="cake-animation">🎂</div>
+                <div class="wish-text">
+                    <p><strong>🌟 On this special day, we celebrate YOU! 🌟</strong></p>
+                    <br>
+                    <p>May your birthday be filled with laughter, joy, and all the things that make you smile!</p>
+                    <br>
+                    <p>Here's to another year of amazing adventures, wonderful memories, and dreams coming true!</p>
+                    <br>
+                    <p><em>🎈 Wishing you happiness today and always! 🎈</em></p>
+                </div>
+                <div class="cake-animation">✨🎁✨</div>
+            </div>
+            
+            <button class="btn" onclick="showTetris()">🎮 Play Birthday Tetris! 🎮</button>
+            <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
+        </div>
+        
+        <!-- Tetris Game Page -->
+        <div id="tetrisPage" class="page">
+            <div class="game-container">
+                <h2 class="game-title">🎮 Birthday Tetris! 🎮</h2>
+                
+                <div class="game-info">
+                    <div>Score: <span id="score">0</span></div>
+                    <div>Level: <span id="level">1</span></div>
+                    <div>Lines: <span id="lines">0</span></div>
+                </div>
+                
+                <!-- Image Selector -->
+                <div class="image-selector">
+                    <div class="controls-title">🎨 Choose Block Images:</div>
+                    <div class="image-options" id="imageOptions">
+                        <!-- Default options -->
+                        <img src="https://via.placeholder.com/60/ff6b8b/ffffff?text=1" class="image-option" onclick="selectImage(this, '#ff6b8b')">
+                        <img src="https://via.placeholder.com/60/4ecdc4/ffffff?text=2" class="image-option" onclick="selectImage(this, '#4ecdc4')">
+                        <img src="https://via.placeholder.com/60/45b7d1/ffffff?text=3" class="image-option" onclick="selectImage(this, '#45b7d1')">
+                        <img src="https://via.placeholder.com/60/96ceb4/ffffff?text=4" class="image-option" onclick="selectImage(this, '#96ceb4')">
+                        <img src="https://via.placeholder.com/60/feca57/ffffff?text=5" class="image-option" onclick="selectImage(this, '#feca57')">
+                        <!-- Add your own images here -->
+                        <img src="https://via.placeholder.com/60/ff9ff3/ffffff?text=6" class="image-option" onclick="selectImage(this, '#ff9ff3')">
+                        <img src="https://via.placeholder.com/60/54a0ff/ffffff?text=7" class="image-option" onclick="selectImage(this, '#54a0ff')">
+                        <img src="https://via.placeholder.com/60/5f27cd/ffffff?text=8" class="image-option" onclick="selectImage(this, '#5f27cd')">
+                    </div>
+                    <div class="controls-text">
+                        <strong>Tip:</strong> Replace the placeholder images with your own by changing the src attributes!
+                    </div>
+                </div>
+                
+                <canvas id="tetrisCanvas" class="tetris-board" width="300" height="600"></canvas>
+                
+                <div class="game-controls">
+                    <div class="controls-title">🎯 How to Play:</div>
+                    <div class="controls-text">
+                        <strong>Desktop:</strong> ← → Arrow keys to move, ↓ to drop faster, ↑ to rotate<br>
+                        <strong>Mobile:</strong> Tap the control buttons below
+                    </div>
+                </div>
+                
+                <div id="mobileControls" style="display: none;">
+                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="moveLeft()">←</button>
+                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="rotate()">↻</button>
+                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="moveRight()">→</button>
+                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="dropFast()">↓</button>
+                </div>
+                
+                <div id="gameOver" class="game-over">
+                    <h3>🎉 Game Over! 🎉</h3>
+                    <p>Final Score: <span id="finalScore">0</span></p>
+                    <p>Thanks for playing Birthday Tetris!</p>
+                </div>
+                
+                <button class="btn" onclick="startGame()">🚀 Start New Game</button>
+                <button class="btn" onclick="showWishing()">🎂 Back to Birthday Wishes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function showTetris() {
+            document.getElementById('wishingPage').classList.remove('active');
+            document.getElementById('tetrisPage').classList.add('active');
+            
+            // Show mobile controls on touch devices
+            if ('ontouchstart' in window) {
+                document.getElementById('mobileControls').style.display = 'block';
+            }
+            
+            initTetris();
+        }
+        
+        function showWishing() {
+            document.getElementById('tetrisPage').classList.remove('active');
+            document.getElementById('wishingPage').classList.add('active');
+        }
+        
+        // Confetti Effect
+        function createConfetti() {
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = getRandomColor();
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+        
+        function getRandomColor() {
+            const colors = ['#ff6b8b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Tetris Game Logic
+        let canvas, ctx;
+        let board = [];
+        let currentPiece = null;
+        let gameRunning = false;
+        let score = 0;
+        let level = 1;
+        let lines = 0;
+        let dropTime = 0;
+        let lastTime = 0;
+        let selectedImage = null;
+        let selectedColor = '#ff6b8b';
+        let imageCache = {};
+        
+        const BOARD_WIDTH = 10;
+        const BOARD_HEIGHT = 20;
+        const BLOCK_SIZE = 30;
+        
+        const PIECES = [
+            { shape: [[1,1,1,1]], name: 'I' }, // I
+            { shape: [[1,1],[1,1]], name: 'O' }, // O
+            { shape: [[0,1,0],[1,1,1]], name: 'T' }, // T
+            { shape: [[0,1,1],[1,1,0]], name: 'S' }, // S
+            { shape: [[1,1,0],[0,1,1]], name: 'Z' }, // Z
+            { shape: [[1,0,0],[1,1,1]], name: 'J' }, // J
+            { shape: [[0,0,1],[1,1,1]], name: 'L' }  // L
+        ];
+        
+        // Image selection
+        function selectImage(element, color) {
+            // Remove selection from all images
+            document.querySelectorAll('.image-option').forEach(img => {
+                img.classList.remove('selected');
+            });
+            
+            // Add selection to clicked image
+            element.classList.add('selected');
+            selectedImage = element.src;
+            selectedColor = color;
+            
+            // Preload the image
+            if (!imageCache[selectedImage]) {
+                const img = new Image();
+                img.src = selectedImage;
+                imageCache[selectedImage] = img;
+            }
+        }
+        
+        // Initialize with first image selected
+        window.addEventListener('load', () => {
+            const firstImage = document.querySelector('.image-option');
+            if (firstImage) {
+                firstImage.click();
+            }
+        });
+        
+        function initTetris() {
+            canvas = document.getElementById('tetrisCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Initialize board
+            board = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+            
+            resetGame();
+        }
+        
+        function resetGame() {
+            board = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+            score = 0;
+            level = 1;
+            lines = 0;
+            updateScore();
+            document.getElementById('gameOver').style.display = 'none';
+        }
+        
+        function startGame() {
+            resetGame();
+            gameRunning = true;
+            spawnPiece();
+            gameLoop();
+        }
+        
+        function spawnPiece() {
+            const pieceType = PIECES[Math.floor(Math.random() * PIECES.length)];
+            currentPiece = {
+                shape: pieceType.shape,
+                name: pieceType.name,
+                x: Math.floor(BOARD_WIDTH / 2) - Math.floor(pieceType.shape[0].length / 2),
+                y: 0,
+                image: selectedImage,
+                color: selectedColor
+            };
+            
+            if (collision()) {
+                gameOver();
+            }
+        }
+        
+        function gameLoop(time = 0) {
+            if (!gameRunning) return;
+            
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            dropTime += deltaTime;
+            
+            if (dropTime > 1000 - (level - 1) * 100) {
+                drop();
+                dropTime = 0;
+            }
+            
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function drop() {
+            currentPiece.y++;
+            if (collision()) {
+                currentPiece.y--;
+                placePiece();
+                clearLines();
+                spawnPiece();
+            }
+        }
+        
+        function collision() {
+            for (let y = 0; y < currentPiece.shape.length; y++) {
+                for (let x = 0; x < currentPiece.shape[y].length; x++) {
+                    if (currentPiece.shape[y][x]) {
+                        const newX = currentPiece.x + x;
+                        const newY = currentPiece.y + y;
+                        
+                        if (newX < 0 || newX >= BOARD_WIDTH || newY >= BOARD_HEIGHT) {
+                            return true;
+                        }
+                        
+                        if (newY >= 0 && board[newY][newX]) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        
+        function placePiece() {
+            for (let y = 0; y < currentPiece.shape.length; y++) {
+                for (let x = 0; x < currentPiece.shape[y].length; x++) {
+                    if (currentPiece.shape[y][x]) {
+                        const boardY = currentPiece.y + y;
+                        const boardX = currentPiece.x + x;
+                        if (boardY >= 0) {
+                            board[boardY][boardX] = {
+                                image: currentPiece.image,
+                                color: currentPiece.color
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        
+        function clearLines() {
+            let linesCleared = 0;
+            for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
+                if (board[y].every(cell => cell !== 0)) {
+                    board.splice(y, 1);
+                    board.unshift(Array(BOARD_WIDTH).fill(0));
+                    linesCleared++;
+                    y++; // Check the same line again
+                }
+            }
+            
+            if (linesCleared > 0) {
+                lines += linesCleared;
+                score += linesCleared * 100 * level;
+                level = Math.floor(lines / 10) + 1;
+                updateScore();
+                
+                if (linesCleared >= 4) {
+                    createConfetti(); // Celebrate Tetris!
+                }
+            }
+        }
+        
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw board
+            for (let y = 0; y < BOARD_HEIGHT; y++) {
+                for (let x = 0; x < BOARD_WIDTH; x++) {
+                    if (board[y][x]) {
+                        const cell = board[y][x];
+                        
+                        // Try to draw image, fall back to color
+                        if (imageCache[cell.image]) {
+                            ctx.drawImage(
+                                imageCache[cell.image],
+                                x * BLOCK_SIZE,
+                                y * BLOCK_SIZE,
+                                BLOCK_SIZE,
+                                BLOCK_SIZE
+                            );
+                        } else {
+                            ctx.fillStyle = cell.color;
+                            ctx.fillRect(
+                                x * BLOCK_SIZE,
+                                y * BLOCK_SIZE,
+                                BLOCK_SIZE - 1,
+                                BLOCK_SIZE - 1
+                            );
+                        }
+                    }
+                }
+            }
+            
+            // Draw current piece
+            if (currentPiece) {
+                for (let y = 0; y < currentPiece.shape.length; y++) {
+                    for (let x = 0; x < currentPiece.shape[y].length; x++) {
+                        if (currentPiece.shape[y][x]) {
+                            if (imageCache[currentPiece.image]) {
+                                ctx.drawImage(
+                                    imageCache[currentPiece.image],
+                                    (currentPiece.x + x) * BLOCK_SIZE,
+                                    (currentPiece.y + y) * BLOCK_SIZE,
+                                    BLOCK_SIZE,
+                                    BLOCK_SIZE
+                                );
+                            } else {
+                                ctx.fillStyle = currentPiece.color;
+                                ctx.fillRect(
+                                    (currentPiece.x + x) * BLOCK_SIZE,
+                                    (currentPiece.y + y) * BLOCK_SIZE,
+                                    BLOCK_SIZE - 1,
+                                    BLOCK_SIZE - 1
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('lines').textContent = lines;
+        }
+        
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+        
+        // Controls
+        function moveLeft() {
+            if (currentPiece) {
+                currentPiece.x--;
+                if (collision()) currentPiece.x++;
+            }
+        }
+        
+        function moveRight() {
+            if (currentPiece) {
+                currentPiece.x++;
+                if (collision()) currentPiece.x--;
+            }
+        }
+        
+        function rotate() {
+            if (currentPiece) {
+                const rotated = currentPiece.shape[0].map((_, i) =>
+                    currentPiece.shape.map(row => row[i]).reverse()
+                );
+                const originalShape = currentPiece.shape;
+                currentPiece.shape = rotated;
+                if (collision()) {
+                    currentPiece.shape = originalShape;
+                }
+            }
+        }
+        
+        function dropFast() {
+            if (currentPiece) {
+                while (!collision()) {
+                    currentPiece.y++;
+                }
+                currentPiece.y--;
+            }
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    moveLeft();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    moveRight();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    drop();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    rotate();
+                    break;
+            }
+        });
+        
+        // Auto-create confetti on page load
+        window.addEventListener('load', () => {
+            setTimeout(createConfetti, 1000);
+        });
+    </script>
+</body>
+</html>
