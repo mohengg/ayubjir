@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Celebration!</title>
+    <title>Birthday Balloon Pop!</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,8 @@
             background: linear-gradient(135deg, #ff9eb7, #ff6b8b, #ff4757);
             min-height: 100vh;
             font-family: 'Arial', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
+            position: relative;
         }
         
         .container {
@@ -103,7 +104,7 @@
             background: linear-gradient(45deg, #ff4757, #ff3742);
         }
         
-        /* Tetris Game Styles */
+        /* Balloon Game Styles */
         .game-container {
             background: rgba(255,255,255,0.95);
             border-radius: 20px;
@@ -111,6 +112,9 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             max-width: 600px;
             width: 100%;
+            position: relative;
+            min-height: 400px;
+            overflow: hidden;
         }
         
         .game-title {
@@ -129,30 +133,29 @@
             color: #666;
         }
         
-        .tetris-board {
-            border: 3px solid #ff6b8b;
-            background: #000;
-            margin: 0 auto 2rem;
-            position: relative;
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 10;
         }
         
-        .game-controls {
-            background: rgba(255,107,139,0.1);
-            padding: 1rem;
-            border-radius: 15px;
-            margin-bottom: 1rem;
+        .balloon:hover {
+            transform: scale(1.1);
         }
         
-        .controls-title {
-            color: #ff6b8b;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+        .balloon-popped {
+            animation: pop 0.4s forwards;
         }
         
-        .controls-text {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.4;
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
         
         .game-over {
@@ -162,6 +165,8 @@
             padding: 2rem;
             border-radius: 15px;
             margin: 1rem 0;
+            position: relative;
+            z-index: 20;
         }
         
         .confetti {
@@ -169,7 +174,7 @@
             width: 10px;
             height: 10px;
             background: #fff;
-            animation: confetti-fall 3s linear infinite;
+            animation: confetti-fall 3s linear forwards;
             z-index: 1000;
         }
         
@@ -182,41 +187,6 @@
                 transform: translateY(100vh) rotate(720deg);
                 opacity: 0;
             }
-        }
-        
-        /* Image selector styles */
-        .image-selector {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255,255,255,0.8);
-            border-radius: 15px;
-        }
-        
-        .image-options {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin: 1rem 0;
-        }
-        
-        .image-option {
-            width: 60px;
-            height: 60px;
-            border: 3px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            object-fit: cover;
-        }
-        
-        .image-option:hover {
-            transform: scale(1.1);
-        }
-        
-        .image-option.selected {
-            border-color: #ff6b8b;
-            box-shadow: 0 0 10px rgba(255,107,139,0.7);
         }
         
         @media (max-width: 768px) {
@@ -233,9 +203,9 @@
                 gap: 0.5rem;
             }
             
-            .image-option {
+            .balloon {
                 width: 50px;
-                height: 50px;
+                height: 70px;
             }
         }
     </style>
@@ -260,65 +230,29 @@
                 <div class="cake-animation">✨🎁✨</div>
             </div>
             
-            <button class="btn" onclick="showTetris()">🎮 Play Birthday Tetris! 🎮</button>
+            <button class="btn" onclick="showBalloonGame()">🎈 Play Balloon Pop! 🎈</button>
             <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
         </div>
         
-        <!-- Tetris Game Page -->
-        <div id="tetrisPage" class="page">
-            <div class="game-container">
-                <h2 class="game-title">🎮 Birthday Tetris! 🎮</h2>
+        <!-- Balloon Game Page -->
+        <div id="balloonPage" class="page">
+            <div class="game-container" id="gameContainer">
+                <h2 class="game-title">🎈 Birthday Balloon Pop! 🎈</h2>
                 
                 <div class="game-info">
-                    <div>Score: <span id="score">0</span></div>
-                    <div>Level: <span id="level">1</span></div>
-                    <div>Lines: <span id="lines">0</span></div>
+                    <div>Balloons Popped: <span id="score">0</span></div>
+                    <div>Time Left: <span id="time">60</span>s</div>
                 </div>
                 
-                <!-- Image Selector -->
-                <div class="image-selector">
-                    <div class="controls-title">🎨 Choose Block Images:</div>
-                    <div class="image-options" id="imageOptions">
-                        <!-- Default options -->
-                        <img src="https://i.pinimg.com/736x/e6/a9/8a/e6a98a257565d829009a1c1735ee1589.jpg" class="image-option" onclick="selectImage(this, '#ff6b8b')">
-                        <img src="https://i.pinimg.com/736x/3e/33/00/3e3300a78e2bc8e02d528eff56f3aad5.jpg" class="image-option" onclick="selectImage(this, '#4ecdc4')">
-                        <img src="https://i.pinimg.com/736x/b9/44/fc/b944fcee4f055a950ce8cf57190dad19.jpg" class="image-option" onclick="selectImage(this, '#45b7d1')">
-                        <img src="https://i.pinimg.com/736x/9f/5b/b0/9f5bb06d8be8ae5318488a8f23233a8e.jpg" class="image-option" onclick="selectImage(this, '#96ceb4')">
-                        <img src="https://i.pinimg.com/736x/dc/ed/c0/dcedc0cb52e20014c063bbad1d5f40ea.jpg" class="image-option" onclick="selectImage(this, '#feca57')">
-                        <!-- Add your own images here -->
-                        <img src="https://via.placeholder.com/60/ff9ff3/ffffff?text=6" class="image-option" onclick="selectImage(this, '#ff9ff3')">
-                        <img src="https://via.placeholder.com/60/54a0ff/ffffff?text=7" class="image-option" onclick="selectImage(this, '#54a0ff')">
-                        <img src="https://via.placeholder.com/60/5f27cd/ffffff?text=8" class="image-option" onclick="selectImage(this, '#5f27cd')">
-                    </div>
-                    <div class="controls-text">
-                        <strong>Tip:</strong> Replace the placeholder images with your own by changing the src attributes!
-                    </div>
-                </div>
-                
-                <canvas id="tetrisCanvas" class="tetris-board" width="300" height="600"></canvas>
-                
-                <div class="game-controls">
-                    <div class="controls-title">🎯 How to Play:</div>
-                    <div class="controls-text">
-                        <strong>Desktop:</strong> ← → Arrow keys to move, ↓ to drop faster, ↑ to rotate<br>
-                        <strong>Mobile:</strong> Tap the control buttons below
-                    </div>
-                </div>
-                
-                <div id="mobileControls" style="display: none;">
-                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="moveLeft()">←</button>
-                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="rotate()">↻</button>
-                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="moveRight()">→</button>
-                    <button class="btn" style="margin: 0.2rem; padding: 10px 15px; font-size: 1rem;" onclick="dropFast()">↓</button>
-                </div>
+                <div id="gameArea" style="position: relative; height: 300px;"></div>
                 
                 <div id="gameOver" class="game-over">
                     <h3>🎉 Game Over! 🎉</h3>
-                    <p>Final Score: <span id="finalScore">0</span></p>
-                    <p>Thanks for playing Birthday Tetris!</p>
+                    <p>You popped <span id="finalScore">0</span> balloons!</p>
+                    <p>Thanks for playing!</p>
                 </div>
                 
-                <button class="btn" onclick="startGame()">🚀 Start New Game</button>
+                <button class="btn" onclick="startGame()">🎈 Play Again</button>
                 <button class="btn" onclick="showWishing()">🎂 Back to Birthday Wishes</button>
             </div>
         </div>
@@ -326,21 +260,16 @@
 
     <script>
         // Page Navigation
-        function showTetris() {
+        function showBalloonGame() {
             document.getElementById('wishingPage').classList.remove('active');
-            document.getElementById('tetrisPage').classList.add('active');
-            
-            // Show mobile controls on touch devices
-            if ('ontouchstart' in window) {
-                document.getElementById('mobileControls').style.display = 'block';
-            }
-            
-            initTetris();
+            document.getElementById('balloonPage').classList.add('active');
+            initGame();
         }
         
         function showWishing() {
-            document.getElementById('tetrisPage').classList.remove('active');
+            document.getElementById('balloonPage').classList.remove('active');
             document.getElementById('wishingPage').classList.add('active');
+            stopGame();
         }
         
         // Confetti Effect
@@ -366,323 +295,178 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
-        // Tetris Game Logic
-        let canvas, ctx;
-        let board = [];
-        let currentPiece = null;
+        // Balloon Game Logic
         let gameRunning = false;
         let score = 0;
-        let level = 1;
-        let lines = 0;
-        let dropTime = 0;
-        let lastTime = 0;
-        let selectedImage = null;
-        let selectedColor = '#ff6b8b';
-        let imageCache = {};
+        let timeLeft = 60;
+        let gameInterval;
+        let balloonInterval;
+        let balloons = [];
+        const balloonColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
         
-        const BOARD_WIDTH = 10;
-        const BOARD_HEIGHT = 20;
-        const BLOCK_SIZE = 30;
-        
-        const PIECES = [
-            { shape: [[1,1,1,1]], name: 'I' }, // I
-            { shape: [[1,1],[1,1]], name: 'O' }, // O
-            { shape: [[0,1,0],[1,1,1]], name: 'T' }, // T
-            { shape: [[0,1,1],[1,1,0]], name: 'S' }, // S
-            { shape: [[1,1,0],[0,1,1]], name: 'Z' }, // Z
-            { shape: [[1,0,0],[1,1,1]], name: 'J' }, // J
-            { shape: [[0,0,1],[1,1,1]], name: 'L' }  // L
-        ];
-        
-        // Image selection
-        function selectImage(element, color) {
-            // Remove selection from all images
-            document.querySelectorAll('.image-option').forEach(img => {
-                img.classList.remove('selected');
-            });
-            
-            // Add selection to clicked image
-            element.classList.add('selected');
-            selectedImage = element.src;
-            selectedColor = color;
-            
-            // Preload the image
-            if (!imageCache[selectedImage]) {
-                const img = new Image();
-                img.src = selectedImage;
-                imageCache[selectedImage] = img;
-            }
-        }
-        
-        // Initialize with first image selected
-        window.addEventListener('load', () => {
-            const firstImage = document.querySelector('.image-option');
-            if (firstImage) {
-                firstImage.click();
-            }
-        });
-        
-        function initTetris() {
-            canvas = document.getElementById('tetrisCanvas');
-            ctx = canvas.getContext('2d');
-            
-            // Initialize board
-            board = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
-            
-            resetGame();
-        }
-        
-        function resetGame() {
-            board = Array(BOARD_HEIGHT).fill().map(() => Array(BOARD_WIDTH).fill(0));
+        function initGame() {
+            document.getElementById('gameArea').innerHTML = '';
+            balloons = [];
             score = 0;
-            level = 1;
-            lines = 0;
+            timeLeft = 60;
             updateScore();
             document.getElementById('gameOver').style.display = 'none';
         }
         
         function startGame() {
-            resetGame();
-            gameRunning = true;
-            spawnPiece();
-            gameLoop();
-        }
-        
-        function spawnPiece() {
-            const pieceType = PIECES[Math.floor(Math.random() * PIECES.length)];
-            currentPiece = {
-                shape: pieceType.shape,
-                name: pieceType.name,
-                x: Math.floor(BOARD_WIDTH / 2) - Math.floor(pieceType.shape[0].length / 2),
-                y: 0,
-                image: selectedImage,
-                color: selectedColor
-            };
+            if (gameRunning) return;
             
-            if (collision()) {
-                gameOver();
-            }
+            initGame();
+            gameRunning = true;
+            
+            // Update timer every second
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            // Create new balloons every 1-2 seconds
+            balloonInterval = setInterval(createBalloon, 1000);
         }
         
-        function gameLoop(time = 0) {
+        function stopGame() {
+            gameRunning = false;
+            clearInterval(gameInterval);
+            clearInterval(balloonInterval);
+            
+            // Remove all balloons
+            balloons.forEach(balloon => {
+                if (balloon.element && balloon.element.parentNode) {
+                    balloon.element.remove();
+                }
+            });
+            balloons = [];
+        }
+        
+        function endGame() {
+            stopGame();
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+            createConfetti();
+        }
+        
+        function createBalloon() {
             if (!gameRunning) return;
             
-            const deltaTime = time - lastTime;
-            lastTime = time;
-            dropTime += deltaTime;
+            const gameArea = document.getElementById('gameArea');
+            const gameRect = gameArea.getBoundingClientRect();
             
-            if (dropTime > 1000 - (level - 1) * 100) {
-                drop();
-                dropTime = 0;
-            }
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
             
-            draw();
-            requestAnimationFrame(gameLoop);
+            // Random balloon color
+            const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+            balloon.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80"><ellipse cx="30" cy="45" rx="25" ry="35" fill="${color}" stroke="#000" stroke-width="1"/><path d="M30,80 Q35,60 40,50" stroke="#000" stroke-width="1" fill="none"/></svg>')`;
+            
+            // Random starting position at bottom
+            const startX = Math.random() * (gameRect.width - 60);
+            balloon.style.left = startX + 'px';
+            balloon.style.bottom = '-80px';
+            
+            balloon.onclick = function() {
+                popBalloon(this);
+            };
+            
+            gameArea.appendChild(balloon);
+            
+            // Animation
+            const speed = 1 + Math.random() * 2; // Random speed
+            const swayAmount = 2 + Math.random() * 3; // Random sway
+            const swaySpeed = 0.01 + Math.random() * 0.02; // Random sway speed
+            
+            const balloonObj = {
+                element: balloon,
+                speed: speed,
+                swayAmount: swayAmount,
+                swaySpeed: swaySpeed,
+                swayPos: Math.random() * Math.PI * 2,
+                x: startX
+            };
+            
+            balloons.push(balloonObj);
+            
+            // Remove balloon if it reaches top without being popped
+            setTimeout(() => {
+                if (balloon.parentNode) {
+                    balloon.remove();
+                    balloons = balloons.filter(b => b.element !== balloon);
+                }
+            }, 10000);
         }
         
-        function drop() {
-            currentPiece.y++;
-            if (collision()) {
-                currentPiece.y--;
-                placePiece();
-                clearLines();
-                spawnPiece();
-            }
-        }
-        
-        function collision() {
-            for (let y = 0; y < currentPiece.shape.length; y++) {
-                for (let x = 0; x < currentPiece.shape[y].length; x++) {
-                    if (currentPiece.shape[y][x]) {
-                        const newX = currentPiece.x + x;
-                        const newY = currentPiece.y + y;
-                        
-                        if (newX < 0 || newX >= BOARD_WIDTH || newY >= BOARD_HEIGHT) {
-                            return true;
-                        }
-                        
-                        if (newY >= 0 && board[newY][newX]) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        
-        function placePiece() {
-            for (let y = 0; y < currentPiece.shape.length; y++) {
-                for (let x = 0; x < currentPiece.shape[y].length; x++) {
-                    if (currentPiece.shape[y][x]) {
-                        const boardY = currentPiece.y + y;
-                        const boardX = currentPiece.x + x;
-                        if (boardY >= 0) {
-                            board[boardY][boardX] = {
-                                image: currentPiece.image,
-                                color: currentPiece.color
-                            };
-                        }
-                    }
-                }
-            }
-        }
-        
-        function clearLines() {
-            let linesCleared = 0;
-            for (let y = BOARD_HEIGHT - 1; y >= 0; y--) {
-                if (board[y].every(cell => cell !== 0)) {
-                    board.splice(y, 1);
-                    board.unshift(Array(BOARD_WIDTH).fill(0));
-                    linesCleared++;
-                    y++; // Check the same line again
-                }
-            }
+        function popBalloon(balloonElement) {
+            if (!gameRunning) return;
             
-            if (linesCleared > 0) {
-                lines += linesCleared;
-                score += linesCleared * 100 * level;
-                level = Math.floor(lines / 10) + 1;
-                updateScore();
-                
-                if (linesCleared >= 4) {
-                    createConfetti(); // Celebrate Tetris!
-                }
-            }
-        }
-        
-        function draw() {
-            // Clear canvas
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            balloonElement.classList.add('balloon-popped');
+            score++;
+            updateScore();
             
-            // Draw board
-            for (let y = 0; y < BOARD_HEIGHT; y++) {
-                for (let x = 0; x < BOARD_WIDTH; x++) {
-                    if (board[y][x]) {
-                        const cell = board[y][x];
-                        
-                        // Try to draw image, fall back to color
-                        if (imageCache[cell.image]) {
-                            ctx.drawImage(
-                                imageCache[cell.image],
-                                x * BLOCK_SIZE,
-                                y * BLOCK_SIZE,
-                                BLOCK_SIZE,
-                                BLOCK_SIZE
-                            );
-                        } else {
-                            ctx.fillStyle = cell.color;
-                            ctx.fillRect(
-                                x * BLOCK_SIZE,
-                                y * BLOCK_SIZE,
-                                BLOCK_SIZE - 1,
-                                BLOCK_SIZE - 1
-                            );
-                        }
-                    }
-                }
-            }
+            // Play pop sound (optional)
+            // new Audio('pop-sound.mp3').play().catch(e => {});
             
-            // Draw current piece
-            if (currentPiece) {
-                for (let y = 0; y < currentPiece.shape.length; y++) {
-                    for (let x = 0; x < currentPiece.shape[y].length; x++) {
-                        if (currentPiece.shape[y][x]) {
-                            if (imageCache[currentPiece.image]) {
-                                ctx.drawImage(
-                                    imageCache[currentPiece.image],
-                                    (currentPiece.x + x) * BLOCK_SIZE,
-                                    (currentPiece.y + y) * BLOCK_SIZE,
-                                    BLOCK_SIZE,
-                                    BLOCK_SIZE
-                                );
-                            } else {
-                                ctx.fillStyle = currentPiece.color;
-                                ctx.fillRect(
-                                    (currentPiece.x + x) * BLOCK_SIZE,
-                                    (currentPiece.y + y) * BLOCK_SIZE,
-                                    BLOCK_SIZE - 1,
-                                    BLOCK_SIZE - 1
-                                );
-                            }
-                        }
-                    }
-                }
-            }
+            setTimeout(() => {
+                balloonElement.remove();
+                balloons = balloons.filter(b => b.element !== balloonElement);
+            }, 400);
         }
         
         function updateScore() {
             document.getElementById('score').textContent = score;
-            document.getElementById('level').textContent = level;
-            document.getElementById('lines').textContent = lines;
         }
         
-        function gameOver() {
-            gameRunning = false;
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('gameOver').style.display = 'block';
-        }
-        
-        // Controls
-        function moveLeft() {
-            if (currentPiece) {
-                currentPiece.x--;
-                if (collision()) currentPiece.x++;
-            }
-        }
-        
-        function moveRight() {
-            if (currentPiece) {
-                currentPiece.x++;
-                if (collision()) currentPiece.x--;
-            }
-        }
-        
-        function rotate() {
-            if (currentPiece) {
-                const rotated = currentPiece.shape[0].map((_, i) =>
-                    currentPiece.shape.map(row => row[i]).reverse()
-                );
-                const originalShape = currentPiece.shape;
-                currentPiece.shape = rotated;
-                if (collision()) {
-                    currentPiece.shape = originalShape;
-                }
-            }
-        }
-        
-        function dropFast() {
-            if (currentPiece) {
-                while (!collision()) {
-                    currentPiece.y++;
-                }
-                currentPiece.y--;
-            }
-        }
-        
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
+        // Game animation loop
+        function gameLoop() {
             if (!gameRunning) return;
             
-            switch(e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    moveLeft();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    moveRight();
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    drop();
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    rotate();
-                    break;
+            const gameArea = document.getElementById('gameArea');
+            const gameRect = gameArea.getBoundingClientRect();
+            
+            balloons.forEach(balloon => {
+                if (!balloon.element.parentNode) return;
+                
+                // Update position
+                const currentBottom = parseFloat(balloon.element.style.bottom || '0');
+                balloon.element.style.bottom = (currentBottom + balloon.speed) + 'px';
+                
+                // Sway movement
+                balloon.swayPos += balloon.swaySpeed;
+                balloon.x += Math.sin(balloon.swayPos) * 0.5;
+                balloon.element.style.left = balloon.x + 'px';
+                
+                // Remove if out of bounds
+                if (currentBottom > gameRect.height + 80) {
+                    balloon.element.remove();
+                    balloons = balloons.filter(b => b !== balloon);
+                }
+            });
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Start animation loop when game starts
+        function initGame() {
+            document.getElementById('gameArea').innerHTML = '';
+            balloons = [];
+            score = 0;
+            timeLeft = 60;
+            updateScore();
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('time').textContent = timeLeft;
+            
+            if (!gameRunning) {
+                gameRunning = true;
+                gameLoop();
             }
-        });
+        }
         
         // Auto-create confetti on page load
         window.addEventListener('load', () => {
