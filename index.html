@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Balloon Pop!</title>
+    <title>Happy Birthday Ayu!</title>
     <style>
         * {
             margin: 0;
@@ -52,13 +52,22 @@
             margin: 2rem 0;
             box-shadow: 0 10px 25px rgba(139, 90, 43, 0.2);
             border: 2px solid #d4a373;
+            max-width: 800px;
         }
         
         .wish-text {
             color: #8b5a2b;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             line-height: 1.8;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .wish-text em {
+            display: block;
+            text-align: center;
+            font-style: normal;
+            margin: 1.5rem 0;
         }
         
         .cake-animation {
@@ -156,24 +165,6 @@
             100% { transform: scale(0); opacity: 0; }
         }
         
-        .game-info {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 245, 230, 0.8);
-            padding: 1rem;
-            border-radius: 15px;
-            border: 2px solid #d4a373;
-            z-index: 1000;
-        }
-        
-        .game-info div {
-            color: #8b5a2b;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-        
         .confetti {
             position: fixed;
             width: 8px;
@@ -194,54 +185,12 @@
             }
         }
         
-        .image-selector {
-            background: rgba(255, 245, 230, 0.9);
-            padding: 1rem;
-            border-radius: 15px;
-            margin: 1rem 0;
-            border: 2px solid #d4a373;
-        }
-        
-        .image-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 1rem 0;
-            justify-content: center;
-        }
-        
-        .image-option {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #d4a373;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .image-option:hover {
-            transform: scale(1.1);
-        }
-        
-        .image-option.selected {
-            border: 3px solid #8b5a2b;
-            box-shadow: 0 0 10px rgba(139, 90, 43, 0.5);
-        }
-        
         @media (max-width: 768px) {
             .wish-card {
-                padding: 2rem 1.5rem;
+                padding: 2rem 1rem;
             }
             
             .wish-text {
-                font-size: 1.2rem;
-            }
-            
-            .game-info {
-                top: 10px;
-                right: 10px;
-                padding: 0.5rem;
                 font-size: 1rem;
             }
             
@@ -259,40 +208,25 @@
 </head>
 <body>
     <div class="container">
-        <!-- Game Info Display -->
-        <div class="game-info">
-            <div>Balloons Popped: <span id="popped">0</span></div>
-            <div>Score: <span id="score">0</span></div>
-        </div>
-        
         <!-- Birthday Wishing Content -->
-        <h1 class="birthday-title">🎉 Happy Birthday AYUUU! 🎉</h1>
+        <h1 class="birthday-title">🎉 Happy Birthday Ayu! 🎉</h1>
         
         <div class="wish-card">
-            <div class="cake-animation">🎂</div>
+            <div class="cake-animation">🌸</div>
             <div class="wish-text">
-                <p><strong>🌟 On this special day, we celebrate YOU! 🌟</strong></p>
-                <br>
-                <p>May your birthday be filled with laughter, joy, and all the things that make you smile!</p>
-                <br>
-                <p>Here's to another year of amazing adventures, wonderful memories, and dreams coming true!</p>
-                <br>
-                <p><em>🎈 Wishing you happiness today and always! 🎈</em></p>
+                <p>On this special day, I celebrate you, Ayu! 🌸</p>
+                
+                <p>May your birthday be filled with endless joy, warm smiles, and beautiful moments with the people you care about.</p>
+                
+                <p>As you begin a new chapter in life, I pray that Allah blesses you with strength, wisdom, and guidance in everything you do. Keep dreaming big, and always put your trust in Allah for Allah is the best of planners.</p>
+                
+                <em>✨ Here's to a future filled with barakah, success, and peace in this world and the Hereafter. ✨</em>
+                
+                <p>Never forget to keep Allah close in your heart, and remember Allah in every step of your journey.</p>
+                
+                <p>🎂 Happy Birthday, Ayu! May your path ahead be bright and your doa always answered. 🎈</p>
             </div>
             <div class="cake-animation">✨🎁✨</div>
-        </div>
-        
-        <!-- Image Selector -->
-        <div class="image-selector">
-            <h3>Choose Balloon Images</h3>
-            <div class="image-options" id="imageOptions">
-                <!-- Default images -->
-                <img src="1.png" class="image-option selected" data-index="0">
-                <img src="1.png" class="image-option" data-index="1">
-                <img src="1.png" class="image-option" data-index="2">
-                <img src="1.png" class="image-option" data-index="3">
-                <img src="1.png" class="image-option" data-index="4">
-            </div>
         </div>
         
         <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
@@ -300,27 +234,8 @@
 
     <script>
         // Balloon Game Logic
-        let balloonsPopped = 0;
-        let score = 0;
         const balloonColors = ['#f8edeb', '#fae1dd', '#fec89a', '#ffd7ba', '#e8ac65', '#d4a373'];
         let balloonInterval;
-        let selectedImageIndex = 0;
-        const balloonImages = [
-            "1.png", // Birthday cake
-            "1.png", // Gift
-            "1.png", // Confetti
-            "1.png", // Star
-            "1.png"  // Heart
-        ];
-        
-        // Initialize image selection
-        document.querySelectorAll('.image-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.image-option').forEach(img => img.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedImageIndex = parseInt(this.getAttribute('data-index'));
-            });
-        });
         
         // Start the game automatically
         window.addEventListener('load', () => {
@@ -350,10 +265,10 @@
             const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
             balloon.style.background = color;
             
-            // Add image to balloon
+            // Add image to balloon (using your 1.png)
             const img = document.createElement('img');
             img.className = 'balloon-image';
-            img.src = balloonImages[selectedImageIndex];
+            img.src = '1.png';
             balloon.appendChild(img);
             
             // Random animation duration
@@ -379,10 +294,6 @@
             if (balloon.classList.contains('popped')) return;
             
             balloon.classList.add('popped');
-            balloonsPopped++;
-            score += 10;
-            
-            updateGameStats();
             
             // Create mini confetti
             createMiniConfetti(balloon);
@@ -393,13 +304,6 @@
                     balloon.remove();
                 }
             }, 500);
-            
-            // Bonus points for multiple pops
-            if (balloonsPopped % 10 === 0) {
-                score += 50;
-                createConfetti();
-                updateGameStats();
-            }
         }
         
         function createMiniConfetti(element) {
@@ -416,11 +320,6 @@
                     confetti.remove();
                 }, 3000);
             }
-        }
-        
-        function updateGameStats() {
-            document.getElementById('popped').textContent = balloonsPopped;
-            document.getElementById('score').textContent = score;
         }
         
         // Confetti Effect
