@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Celebration!</title>
+    <title>Happy Birthday Balloon Pop!</title>
     <style>
         * {
             margin: 0;
@@ -109,6 +109,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             z-index: 100;
             animation: float-up 8s linear forwards;
+            bottom: -100px;
         }
         
         .balloon::after {
@@ -132,19 +133,12 @@
         
         @keyframes float-up {
             0% {
-                transform: translateY(100vh) scale(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-                transform: translateY(90vh) scale(1);
-            }
-            90% {
+                transform: translateY(0);
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100px) scale(0.9);
-                opacity: 0;
+                transform: translateY(-120vh);
+                opacity: 1;
             }
         }
         
@@ -253,6 +247,11 @@
         });
         
         function startBalloonGame() {
+            // Create initial balloons
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createBalloon, i * 500);
+            }
+            
             // Create balloons at random intervals
             balloonInterval = setInterval(createBalloon, 1000 + Math.random() * 1500);
         }
@@ -262,9 +261,8 @@
             balloon.className = 'balloon';
             
             // Random position at bottom of screen
-            const leftPosition = Math.random() * (window.innerWidth - 60);
+            const leftPosition = 20 + Math.random() * (window.innerWidth - 100);
             balloon.style.left = leftPosition + 'px';
-            balloon.style.bottom = '-80px';
             
             // Random color from our palette
             const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
@@ -279,13 +277,15 @@
             balloon.style.animationDuration = duration + 's';
             
             // Add click handler
-            balloon.onclick = () => popBalloon(balloon);
+            balloon.addEventListener('click', function() {
+                popBalloon(balloon);
+            });
             
             document.body.appendChild(balloon);
             
             // Remove balloon after animation completes
             setTimeout(() => {
-                if (balloon.parentNode) {
+                if (balloon.parentNode && !balloon.classList.contains('popped')) {
                     balloon.remove();
                 }
             }, duration * 1000);
@@ -305,7 +305,9 @@
             
             // Remove balloon after animation
             setTimeout(() => {
-                balloon.remove();
+                if (balloon.parentNode) {
+                    balloon.remove();
+                }
             }, 500);
             
             // Bonus points for multiple pops
