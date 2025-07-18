@@ -98,8 +98,8 @@
         /* Balloon Styles */
         .balloon {
             position: fixed;
-            width: 60px;
-            height: 80px;
+            width: 80px;
+            height: 100px;
             cursor: pointer;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             display: flex;
@@ -109,7 +109,8 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             z-index: 100;
             animation: float-up 8s linear forwards;
-            bottom: -100px;
+            bottom: -120px;
+            overflow: hidden;
         }
         
         .balloon::after {
@@ -119,7 +120,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 2px;
-            height: 20px;
+            height: 30px;
             background: #8b5a2b;
         }
         
@@ -129,6 +130,13 @@
         
         .balloon.popped {
             animation: pop-animation 0.5s ease-out forwards;
+        }
+        
+        .balloon-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
         }
         
         @keyframes float-up {
@@ -186,6 +194,41 @@
             }
         }
         
+        .image-selector {
+            background: rgba(255, 245, 230, 0.9);
+            padding: 1rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            border: 2px solid #d4a373;
+        }
+        
+        .image-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+        
+        .image-option {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #d4a373;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .image-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .image-option.selected {
+            border: 3px solid #8b5a2b;
+            box-shadow: 0 0 10px rgba(139, 90, 43, 0.5);
+        }
+        
         @media (max-width: 768px) {
             .wish-card {
                 padding: 2rem 1.5rem;
@@ -200,6 +243,16 @@
                 right: 10px;
                 padding: 0.5rem;
                 font-size: 1rem;
+            }
+            
+            .balloon {
+                width: 70px;
+                height: 90px;
+            }
+            
+            .balloon-image {
+                width: 50px;
+                height: 50px;
             }
         }
     </style>
@@ -229,6 +282,19 @@
             <div class="cake-animation">✨🎁✨</div>
         </div>
         
+        <!-- Image Selector -->
+        <div class="image-selector">
+            <h3>Choose Balloon Images</h3>
+            <div class="image-options" id="imageOptions">
+                <!-- Default images -->
+                <img src="https://i.pinimg.com/736x/3f/f1/46/3ff146c298c3f3881e3c9eebad2c1628.jpg" class="image-option selected" data-index="0">
+                <img src="https://i.pinimg.com/736x/49/10/fa/4910faa7de4dd3458f8870c869f9ede5.jpg" class="image-option" data-index="1">
+                <img src="https://i.pinimg.com/736x/20/f0/2c/20f02cad2014df96258caeed3be893cb.jpg" class="image-option" data-index="2">
+                <img src="https://i.pinimg.com/736x/53/71/06/537106172bd60bc69895951478896d2d.jpg" class="image-option" data-index="3">
+                <img src="https://i.pinimg.com/1200x/fe/41/bf/fe41bf09719d7ca7b0a2e6a768ac5753.jpg" class="image-option" data-index="4">
+            </div>
+        </div>
+        
         <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
     </div>
 
@@ -237,8 +303,24 @@
         let balloonsPopped = 0;
         let score = 0;
         const balloonColors = ['#f8edeb', '#fae1dd', '#fec89a', '#ffd7ba', '#e8ac65', '#d4a373'];
-        const balloonEmojis = ['🎈', '🎉', '🎊', '🎁', '✨', '🌟', '💝'];
         let balloonInterval;
+        let selectedImageIndex = 0;
+        const balloonImages = [
+            "https://i.imgur.com/5R5h1Qa.png", // Birthday cake
+            "https://i.imgur.com/JqYeZ0V.png", // Gift
+            "https://i.imgur.com/8Q3QY9j.png", // Confetti
+            "https://i.imgur.com/7V3vX9L.png", // Star
+            "https://i.imgur.com/1X2Q3Y4.png"  // Heart
+        ];
+        
+        // Initialize image selection
+        document.querySelectorAll('.image-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.image-option').forEach(img => img.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedImageIndex = parseInt(this.getAttribute('data-index'));
+            });
+        });
         
         // Start the game automatically
         window.addEventListener('load', () => {
@@ -268,9 +350,11 @@
             const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
             balloon.style.background = color;
             
-            // Random emoji
-            const emoji = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
-            balloon.textContent = emoji;
+            // Add image to balloon
+            const img = document.createElement('img');
+            img.className = 'balloon-image';
+            img.src = balloonImages[selectedImageIndex];
+            balloon.appendChild(img);
             
             // Random animation duration
             const duration = 6 + Math.random() * 6;
