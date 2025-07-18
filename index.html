@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Balloon Pop!</title>
+    <title>Happy Birthday Celebration!</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #ff9eb7, #ff6b8b, #ff4757);
+            background: linear-gradient(135deg, #fff5e6, #ffe8cc, #ffddb3);
             min-height: 100vh;
             font-family: 'Arial', sans-serif;
             overflow: hidden;
@@ -29,23 +29,13 @@
             align-items: center;
         }
         
-        .page {
-            display: none;
-            width: 100%;
-            max-width: 800px;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
         /* Birthday Wishing Page */
         .birthday-title {
-            color: #fff;
+            color: #8b5a2b;
             font-size: clamp(2.5rem, 6vw, 5rem);
             margin-bottom: 2rem;
             animation: bounce 2s infinite;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         @keyframes bounce {
@@ -56,16 +46,16 @@
         }
         
         .wish-card {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 245, 230, 0.9);
             border-radius: 25px;
             padding: 3rem 2rem;
             margin: 2rem 0;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(139, 90, 43, 0.2);
+            border: 2px solid #d4a373;
         }
         
         .wish-text {
-            color: #ff6b8b;
+            color: #8b5a2b;
             font-size: 1.4rem;
             line-height: 1.8;
             margin-bottom: 2rem;
@@ -75,6 +65,7 @@
             font-size: 4rem;
             animation: cake-glow 2s ease-in-out infinite alternate;
             margin: 1rem 0;
+            color: #d4a373;
         }
         
         @keyframes cake-glow {
@@ -83,7 +74,7 @@
         }
         
         .btn {
-            background: linear-gradient(45deg, #ff6b8b, #ff4757);
+            background: linear-gradient(45deg, #d4a373, #bc8a5f);
             color: #fff;
             padding: 18px 35px;
             border: none;
@@ -92,7 +83,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(255,107,139,0.4);
+            box-shadow: 0 6px 20px rgba(212, 163, 115, 0.4);
             margin: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -100,80 +91,92 @@
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255,107,139,0.6);
-            background: linear-gradient(45deg, #ff4757, #ff3742);
+            box-shadow: 0 10px 25px rgba(212, 163, 115, 0.6);
+            background: linear-gradient(45deg, #bc8a5f, #a47148);
         }
         
-        /* Balloon Game Styles */
-        .game-container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            max-width: 600px;
-            width: 100%;
-            position: relative;
-            min-height: 400px;
-            overflow: hidden;
-        }
-        
-        .game-title {
-            color: #ff6b8b;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #666;
-        }
-        
+        /* Balloon Styles */
         .balloon {
-            position: absolute;
+            position: fixed;
             width: 60px;
             height: 80px;
-            background-size: contain;
-            background-repeat: no-repeat;
             cursor: pointer;
-            transition: transform 0.2s;
-            z-index: 10;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            animation: float-up 8s linear forwards;
+        }
+        
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background: #8b5a2b;
         }
         
         .balloon:hover {
             transform: scale(1.1);
         }
         
-        .balloon-popped {
-            animation: pop 0.4s forwards;
+        .balloon.popped {
+            animation: pop-animation 0.5s ease-out forwards;
         }
         
-        @keyframes pop {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.8; }
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.9);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes pop-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); opacity: 0.8; }
             100% { transform: scale(0); opacity: 0; }
         }
         
-        .game-over {
-            display: none;
-            background: rgba(255,107,139,0.9);
-            color: white;
-            padding: 2rem;
+        .game-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 245, 230, 0.8);
+            padding: 1rem;
             border-radius: 15px;
-            margin: 1rem 0;
-            position: relative;
-            z-index: 20;
+            border: 2px solid #d4a373;
+            z-index: 1000;
+        }
+        
+        .game-info div {
+            color: #8b5a2b;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
         }
         
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #fff;
+            width: 8px;
+            height: 8px;
+            background: #d4a373;
             animation: confetti-fall 3s linear forwards;
             z-index: 1000;
         }
@@ -199,87 +202,149 @@
             }
             
             .game-info {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .balloon {
-                width: 50px;
-                height: 70px;
+                top: 10px;
+                right: 10px;
+                padding: 0.5rem;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Birthday Wishing Page -->
-        <div id="wishingPage" class="page active">
-            <h1 class="birthday-title">🎉 Happy Birthday! 🎉</h1>
-            
-            <div class="wish-card">
-                <div class="cake-animation">🎂</div>
-                <div class="wish-text">
-                    <p><strong>🌟 On this special day, we celebrate YOU! 🌟</strong></p>
-                    <br>
-                    <p>May your birthday be filled with laughter, joy, and all the things that make you smile!</p>
-                    <br>
-                    <p>Here's to another year of amazing adventures, wonderful memories, and dreams coming true!</p>
-                    <br>
-                    <p><em>🎈 Wishing you happiness today and always! 🎈</em></p>
-                </div>
-                <div class="cake-animation">✨🎁✨</div>
-            </div>
-            
-            <button class="btn" onclick="showBalloonGame()">🎈 Play Balloon Pop! 🎈</button>
-            <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
+        <!-- Game Info Display -->
+        <div class="game-info">
+            <div>Balloons Popped: <span id="popped">0</span></div>
+            <div>Score: <span id="score">0</span></div>
         </div>
         
-        <!-- Balloon Game Page -->
-        <div id="balloonPage" class="page">
-            <div class="game-container" id="gameContainer">
-                <h2 class="game-title">🎈 Birthday Balloon Pop! 🎈</h2>
-                
-                <div class="game-info">
-                    <div>Balloons Popped: <span id="score">0</span></div>
-                    <div>Time Left: <span id="time">60</span>s</div>
-                </div>
-                
-                <div id="gameArea" style="position: relative; height: 300px;"></div>
-                
-                <div id="gameOver" class="game-over">
-                    <h3>🎉 Game Over! 🎉</h3>
-                    <p>You popped <span id="finalScore">0</span> balloons!</p>
-                    <p>Thanks for playing!</p>
-                </div>
-                
-                <button class="btn" onclick="startGame()">🎈 Play Again</button>
-                <button class="btn" onclick="showWishing()">🎂 Back to Birthday Wishes</button>
+        <!-- Birthday Wishing Content -->
+        <h1 class="birthday-title">🎉 Happy Birthday! 🎉</h1>
+        
+        <div class="wish-card">
+            <div class="cake-animation">🎂</div>
+            <div class="wish-text">
+                <p><strong>🌟 On this special day, we celebrate YOU! 🌟</strong></p>
+                <br>
+                <p>May your birthday be filled with laughter, joy, and all the things that make you smile!</p>
+                <br>
+                <p>Here's to another year of amazing adventures, wonderful memories, and dreams coming true!</p>
+                <br>
+                <p><em>🎈 Wishing you happiness today and always! 🎈</em></p>
             </div>
+            <div class="cake-animation">✨🎁✨</div>
         </div>
+        
+        <button class="btn" onclick="createConfetti()">🎊 Celebrate! 🎊</button>
     </div>
 
     <script>
-        // Page Navigation
-        function showBalloonGame() {
-            document.getElementById('wishingPage').classList.remove('active');
-            document.getElementById('balloonPage').classList.add('active');
-            initGame();
+        // Balloon Game Logic
+        let balloonsPopped = 0;
+        let score = 0;
+        const balloonColors = ['#f8edeb', '#fae1dd', '#fec89a', '#ffd7ba', '#e8ac65', '#d4a373'];
+        const balloonEmojis = ['🎈', '🎉', '🎊', '🎁', '✨', '🌟', '💝'];
+        let balloonInterval;
+        
+        // Start the game automatically
+        window.addEventListener('load', () => {
+            createConfetti();
+            startBalloonGame();
+        });
+        
+        function startBalloonGame() {
+            // Create balloons at random intervals
+            balloonInterval = setInterval(createBalloon, 1000 + Math.random() * 1500);
         }
         
-        function showWishing() {
-            document.getElementById('balloonPage').classList.remove('active');
-            document.getElementById('wishingPage').classList.add('active');
-            stopGame();
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            
+            // Random position at bottom of screen
+            const leftPosition = Math.random() * (window.innerWidth - 60);
+            balloon.style.left = leftPosition + 'px';
+            balloon.style.bottom = '-80px';
+            
+            // Random color from our palette
+            const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+            balloon.style.background = color;
+            
+            // Random emoji
+            const emoji = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+            balloon.textContent = emoji;
+            
+            // Random animation duration
+            const duration = 6 + Math.random() * 6;
+            balloon.style.animationDuration = duration + 's';
+            
+            // Add click handler
+            balloon.onclick = () => popBalloon(balloon);
+            
+            document.body.appendChild(balloon);
+            
+            // Remove balloon after animation completes
+            setTimeout(() => {
+                if (balloon.parentNode) {
+                    balloon.remove();
+                }
+            }, duration * 1000);
+        }
+        
+        function popBalloon(balloon) {
+            if (balloon.classList.contains('popped')) return;
+            
+            balloon.classList.add('popped');
+            balloonsPopped++;
+            score += 10;
+            
+            updateGameStats();
+            
+            // Create mini confetti
+            createMiniConfetti(balloon);
+            
+            // Remove balloon after animation
+            setTimeout(() => {
+                balloon.remove();
+            }, 500);
+            
+            // Bonus points for multiple pops
+            if (balloonsPopped % 10 === 0) {
+                score += 50;
+                createConfetti();
+                updateGameStats();
+            }
+        }
+        
+        function createMiniConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 8; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = rect.left + rect.width/2 + 'px';
+                confetti.style.top = rect.top + rect.height/2 + 'px';
+                confetti.style.background = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+        
+        function updateGameStats() {
+            document.getElementById('popped').textContent = balloonsPopped;
+            document.getElementById('score').textContent = score;
         }
         
         // Confetti Effect
         function createConfetti() {
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 50; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = getRandomColor();
+                    confetti.style.background = balloonColors[Math.floor(Math.random() * balloonColors.length)];
                     confetti.style.animationDelay = Math.random() * 3 + 's';
                     document.body.appendChild(confetti);
                     
@@ -289,189 +354,6 @@
                 }, i * 100);
             }
         }
-        
-        function getRandomColor() {
-            const colors = ['#ff6b8b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Balloon Game Logic
-        let gameRunning = false;
-        let score = 0;
-        let timeLeft = 60;
-        let gameInterval;
-        let balloonInterval;
-        let balloons = [];
-        const balloonColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
-        
-        function initGame() {
-            document.getElementById('gameArea').innerHTML = '';
-            balloons = [];
-            score = 0;
-            timeLeft = 60;
-            updateScore();
-            document.getElementById('gameOver').style.display = 'none';
-        }
-        
-        function startGame() {
-            if (gameRunning) return;
-            
-            initGame();
-            gameRunning = true;
-            
-            // Update timer every second
-            gameInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    endGame();
-                }
-            }, 1000);
-            
-            // Create new balloons every 1-2 seconds
-            balloonInterval = setInterval(createBalloon, 1000);
-        }
-        
-        function stopGame() {
-            gameRunning = false;
-            clearInterval(gameInterval);
-            clearInterval(balloonInterval);
-            
-            // Remove all balloons
-            balloons.forEach(balloon => {
-                if (balloon.element && balloon.element.parentNode) {
-                    balloon.element.remove();
-                }
-            });
-            balloons = [];
-        }
-        
-        function endGame() {
-            stopGame();
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('gameOver').style.display = 'block';
-            createConfetti();
-        }
-        
-        function createBalloon() {
-            if (!gameRunning) return;
-            
-            const gameArea = document.getElementById('gameArea');
-            const gameRect = gameArea.getBoundingClientRect();
-            
-            const balloon = document.createElement('div');
-            balloon.className = 'balloon';
-            
-            // Random balloon color
-            const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
-            balloon.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80"><ellipse cx="30" cy="45" rx="25" ry="35" fill="${color}" stroke="#000" stroke-width="1"/><path d="M30,80 Q35,60 40,50" stroke="#000" stroke-width="1" fill="none"/></svg>')`;
-            
-            // Random starting position at bottom
-            const startX = Math.random() * (gameRect.width - 60);
-            balloon.style.left = startX + 'px';
-            balloon.style.bottom = '-80px';
-            
-            balloon.onclick = function() {
-                popBalloon(this);
-            };
-            
-            gameArea.appendChild(balloon);
-            
-            // Animation
-            const speed = 1 + Math.random() * 2; // Random speed
-            const swayAmount = 2 + Math.random() * 3; // Random sway
-            const swaySpeed = 0.01 + Math.random() * 0.02; // Random sway speed
-            
-            const balloonObj = {
-                element: balloon,
-                speed: speed,
-                swayAmount: swayAmount,
-                swaySpeed: swaySpeed,
-                swayPos: Math.random() * Math.PI * 2,
-                x: startX
-            };
-            
-            balloons.push(balloonObj);
-            
-            // Remove balloon if it reaches top without being popped
-            setTimeout(() => {
-                if (balloon.parentNode) {
-                    balloon.remove();
-                    balloons = balloons.filter(b => b.element !== balloon);
-                }
-            }, 10000);
-        }
-        
-        function popBalloon(balloonElement) {
-            if (!gameRunning) return;
-            
-            balloonElement.classList.add('balloon-popped');
-            score++;
-            updateScore();
-            
-            // Play pop sound (optional)
-            // new Audio('pop-sound.mp3').play().catch(e => {});
-            
-            setTimeout(() => {
-                balloonElement.remove();
-                balloons = balloons.filter(b => b.element !== balloonElement);
-            }, 400);
-        }
-        
-        function updateScore() {
-            document.getElementById('score').textContent = score;
-        }
-        
-        // Game animation loop
-        function gameLoop() {
-            if (!gameRunning) return;
-            
-            const gameArea = document.getElementById('gameArea');
-            const gameRect = gameArea.getBoundingClientRect();
-            
-            balloons.forEach(balloon => {
-                if (!balloon.element.parentNode) return;
-                
-                // Update position
-                const currentBottom = parseFloat(balloon.element.style.bottom || '0');
-                balloon.element.style.bottom = (currentBottom + balloon.speed) + 'px';
-                
-                // Sway movement
-                balloon.swayPos += balloon.swaySpeed;
-                balloon.x += Math.sin(balloon.swayPos) * 0.5;
-                balloon.element.style.left = balloon.x + 'px';
-                
-                // Remove if out of bounds
-                if (currentBottom > gameRect.height + 80) {
-                    balloon.element.remove();
-                    balloons = balloons.filter(b => b !== balloon);
-                }
-            });
-            
-            requestAnimationFrame(gameLoop);
-        }
-        
-        // Start animation loop when game starts
-        function initGame() {
-            document.getElementById('gameArea').innerHTML = '';
-            balloons = [];
-            score = 0;
-            timeLeft = 60;
-            updateScore();
-            document.getElementById('gameOver').style.display = 'none';
-            document.getElementById('time').textContent = timeLeft;
-            
-            if (!gameRunning) {
-                gameRunning = true;
-                gameLoop();
-            }
-        }
-        
-        // Auto-create confetti on page load
-        window.addEventListener('load', () => {
-            setTimeout(createConfetti, 1000);
-        });
     </script>
 </body>
 </html>
